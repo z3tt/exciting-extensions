@@ -16,12 +16,9 @@ format:
     scrollable: false
     hide-inactive-cursor: true
     highlight-style: printing
-    chalkboard:
-      theme: whiteboard
-      boardmarker-width: 4
-      buttons: true
     pause: true
     mainfont: Asap SemiCondensed
+    self-contained: true
 editor: source
 knitr:
   opts_chunk:
