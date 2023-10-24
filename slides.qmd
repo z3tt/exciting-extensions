@@ -1,0 +1,1961 @@
+---
+title: "<b style='color:#505050'>(Even More)</b><br>Exciting Data Visualizations with ggplot2 Extensions"
+title-slide-attributes:
+  data-background-image: img/bg-logo.png
+  data-background-size: cover
+author: "<b style='color:#ffffff;font-size:1.3em;'><a href='https://www.cedricscherer.com'>Dr. Cédric Scherer</a></b><br>&ensp;R User Group Berlin&ensp;**//**&ensp;October 2023"
+format:
+  revealjs:
+    theme: slides.scss
+    logo: img/portfolio/logo.png
+    footer: '**[Cédric Scherer](https://cedricscherer.com)** // Data Visualization & Information Design'
+    transition: fade
+    progress: true
+    multiplex: false
+    preview-links: true
+    scrollable: false
+    hide-inactive-cursor: true
+    highlight-style: printing
+    pause: true
+    mainfont: Asap SemiCondensed
+editor: source
+knitr:
+  opts_chunk:
+    dev: "ragg_png"
+    retina: 2
+    dpi: 250
+execute:
+  freeze: auto
+  cache: true
+  echo: true
+  fig-width: 7
+  fig-height: 9.5
+include-after: |
+  <script type="text/javascript">
+    Reveal.on('ready', event => {
+      if (event.indexh === 0) {
+        document.querySelector("div.has-logo > img.slide-logo").style.display = "none";
+      }
+    });
+    Reveal.addEventListener('slidechanged', (event) => {
+      if (event.indexh === 0) {
+        Reveal.configure({ slideNumber: null });
+        document.querySelector("div.has-logo > img.slide-logo").style.display = "none";
+      }
+      if (event.indexh === 1) { 
+        Reveal.configure({ slideNumber: 'c' });
+        document.querySelector("div.has-logo > img.slide-logo").style.display = null;
+      }
+    });
+    Reveal.on('ready', event => {
+      if (event.indexh === 0) {
+        document.querySelector("div.footer-default").style.display = "none";
+      }
+    });
+    Reveal.addEventListener('slidechanged', (event) => {
+      if (event.indexh === 0) {
+        Reveal.configure({ slideNumber: null });
+        document.querySelector("div.footer-default").style.display = "none";
+      }
+      if (event.indexh === 1) { 
+        Reveal.configure({ slideNumber: 'c' });
+        document.querySelector("div.footer-default").style.display = null;
+      }
+    });
+  </script>
+---
+
+
+# Welcome!
+
+
+
+##  {#cedric-avatars data-menu-title="Cédric Avatars" background-image="img/portfolio/avatars-logo.png" background-position="center" background-size="80%"}
+
+
+
+##  {#cedric-dataviz-clients data-menu-title="Cédric Projects Clients" background-image="img/portfolio/projects-clients.png" background-position="center" background-size="77%" background-color="#ABABAB"}
+
+
+
+## {#cedric-dataviz-personal data-menu-title="Cédric Projects Personal"background-image="img/portfolio/projects-personal.png" background-position="center" background-size="85%" background-color="#ABABAB"}
+
+
+
+## {#cedric-blog data-menu-title="Cédric Blog"}
+
+![[cedricscherer.com](https://cedricscherer.com)](img/portfolio/blog.png){fig-align="center" fig-alt="Screenshot of my webpage (landing page)"}
+
+
+
+## {#cedric-ggplot-tutorial data-menu-title="Cédric Blog Tutorial"}
+
+![[cedricscherer.com](https://cedricscherer.com)](img/portfolio/blog-tutorial.png){fig-align="center" fig-alt="Screenshot of the blog post on the 2-day workshop at rstudio::conf(2022)"}
+
+
+
+## {#cedric-ggplot-tutorial-overview data-menu-title="Cédric Blog Tutorial Overview"}
+
+![[cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/)](img/portfolio/ggplot-tutorial-overview.png){fig-align="center" fig-alt="Overview of some exemplary plots included in my ggplot2 tutorial."}
+
+
+
+## {#cedric-rstudio-conf data-menu-title="Cédric Blog rstudio::conf"}
+
+![[cedricscherer.com](https://cedricscherer.com)](img/portfolio/blog-rstudioconf.png){fig-align="center" fig-alt="Screenshot of the blog post on the 2-day workshop at rstudio::conf(2022)"}
+
+
+
+## {#cedric-github data-menu-title="Cédric GitHub"}
+
+![[github.com/z3tt](https://github.com/z3tt)](img/portfolio/github.png){fig-align="center" fig-alt="Screenshot of my GitHub profile page"}
+
+
+
+## Course Materials
+
+<br>
+
+#### Slides
+
+<div style='padding-top:.5em;'><a span style='color:#28A87D;font-size:.95em;font-family:spline sans mono;font-weight:700;' href="https://z3tt.github.io/exciting-extensions/slides.html">z3tt.github.io/exciting-extensions/slides.html</a></div>
+<br>
+
+#### Script
+
+<div style='padding-top:.5em;'><a span style='color:#28A87D;font-size:.95em;font-family:spline sans mono;font-weight:700;' href="https://cedricscherer.com/codes/exciting-extensions.R">cedricscherer.com/codes/exciting-extensions.R</a></div>
+<br>
+
+#### Font Files
+
+<div style='padding-top:.5em;'><a span style='color:#28A87D;font-size:.95em;font-family:spline sans mono;font-weight:700;' href="https://fonts.google.com/specimen/Asap">fonts.google.com/specimen/Asap</a></div>
+
+
+
+## {#ggplot-package data-menu-title="The ggplot2 Package"}
+
+::: footer
+[{ggplot2} package description](https://ggplot2.tidyverse.org/)
+:::
+
+![](img/logo-ggplot2.png){fig-align="center" fig-alt="The ggplot2 hex logo."}
+
+<br>
+
+<div style='text-align:center;'>
+<b style='font-size:1.25em;'><code>{ggplot2}</code> is a system for declaratively creating graphics,<br>based on "The Grammar of Graphics" (Wilkinson, 2005).</b>
+</div>
+
+::: fragment
+<div style='text-align:center;'>
+<span style='font-size:1em;'>You provide the data, tell <code>{ggplot2}</code> how to <span class='circle-highlight'>map variables to aesthetics</span>,<br>what graphical primitives to use, and it takes care of the details.</span>
+</div>
+:::
+
+
+
+## {#components-1 data-menu-title="Components of a ggplot"}
+
+<br><br>
+<b style='font-size:1.65em;font-family: spline sans mono;color:#28a87d;'>
+&emsp;&emsp;data +  
+&emsp;&emsp;&emsp;mapping +  
+&emsp;&emsp;&emsp;geometry
+</b>
+
+
+
+## {#components-2 data-menu-title="Components of a ggplot"}
+
+<br><br>
+<b style='font-size:1.65em;font-family: spline sans mono;'>
+&emsp;&emsp;data +  
+&emsp;&emsp;&emsp;mapping +  
+&emsp;&emsp;&emsp;geometry +  
+<b style='color:#28a87d;'>
+&emsp;&emsp;&emsp;statistics +  
+&emsp;&emsp;&emsp;facets +  
+&emsp;&emsp;&emsp;coordinate systems +   
+&emsp;&emsp;&emsp;scales +   
+&emsp;&emsp;&emsp;theme
+</b></b>
+
+
+
+## {#exploratory-ggplots data-menu-title="Exploratory Plots"}
+
+![Illustration by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)](img/ah_ggplot2_exploratory.png){fig-align="center" fig-alt="Allison Horsts monster illustration of explorative plotting with ggplot2."}
+
+
+
+## {#basic-ggplot-examples data-menu-title="Basic ggplots"}
+
+![ggplot2 Examples featured on ggplot2.tidyverse.org](img/basic-ggplots.png){fig-align="center" fig-alt="A collection of the versatility of ggplot2 to create basic graphs. All of them use the default grey ggplot2 theme."}
+
+
+
+## {#ggplot-masterpieces data-menu-title="ggplot2 Masterpiece"}
+
+![Illustration by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)](img/ah_ggplot2_masterpiece.png){fig-align="center" width="80%" fig-alt="Allison Horsts monster illustration of building data masterpiece ith ggplot2 featuring a little Picasso monster :)"}
+
+
+
+## The ggplot2 Extension Universe{.center}
+
+![[exts.ggplot2.tidyverse.org/gallery](https://exts.ggplot2.tidyverse.org/gallery/)](img/ggplot2-extension-gallery.png){fig-align="center" width="90%" fig-alt="A screenshot of the ggplot2 extension gallery available at exts.ggplot2.tiverse.org"}
+
+
+
+## The ggplot2 Extension Universe{.center}
+
+![[github.com/erikgahner/awesome-ggplot2](https://github.com/erikgahner/awesome-ggplot2/)](img/erikgahner-awesome-ggplot2.gif){fig-align="center" width="190%" fig-alt="A screenshot of the ggplot2 extension gallery available at exts.ggplot2.tiverse.org"}
+
+
+
+## {#tidytuesday data-menu-title="#TidyTuesday" background-color="white" .center}
+
+![](img/tidytuesday.png){fig-align="center" fig-alt="The banner of the community data challenge TidyTuesday."}
+
+
+
+## The Data
+
+<br>
+<b style='font-size:2.3rem;'>Bike sharing counts in London, UK, powered by [TfL Open Data](https://tfl.gov.uk/modes/cycling/santander-cycles)</b>
+
+::: incremental
+-   covers the years 2015 and 2016
+-   incl. weather data acquired from [freemeteo.com](https://freemeteo.com)
+-   prepared by Hristo Mavrodiev for [Kaggle](https://www.kaggle.com/hmavrodiev/london-bike-sharing-dataset)
+-   further modification by myself
+:::
+
+<br>
+
+::: fragment
+```{r}
+#| label: data-import
+#| cache: false
+bikes <- readr::read_csv(
+  "https://cedricscherer.com/data/london-bikes-custom.csv",
+  col_types = "Dcfffilllddddc"
+)
+```
+:::
+
+
+
+------------------------------------------------------------------------
+
+```{r}
+#| label: data-table
+#| echo: false
+#| purl: false
+library(tidyverse)
+tibble(
+    Variable = names(bikes),
+    Description = c(
+      "Date encoded as `YYYY-MM-DD`", "`day` (6:00am–5:59pm) or `night` (6:00pm–5:59am)", "`2015` or `2016`", "`1` (January) to `12` (December)", "`winter`, `spring`, `summer`, or `autumn`", "Sum of reported bikes rented", "`TRUE` being Monday to Friday and no bank holiday", "`TRUE` being Saturday or Sunday", "`TRUE` being a bank holiday in the UK", "Average air temperature (°C)", "Average feels like temperature (°C)", "Average air humidity (%)", "Average wind speed (km/h)", "Most common weather type"
+    ),
+    Class = c(
+      "date", "character", "factor", "factor", "factor", "integer", "logical", "logical", "logical", "double", "double", "double", "double", "character"
+    )
+  ) %>%
+  kableExtra::kbl(
+    booktabs = TRUE, longtable = TRUE
+  ) %>%
+  kableExtra::kable_styling(
+    font_size = 24
+  ) %>%
+  kableExtra::kable_minimal(
+    "hover", full_width = TRUE, position = "left", html_font = "Spline Sans"
+  )
+```
+
+
+
+## The Data
+
+```{r}
+#| label: setup-data-subsets
+#| cache: false
+library(dplyr)
+
+bikes_day <- filter(
+  bikes, day_night == "day", !is.na(weather_type)
+)
+
+bikes_monthly <-
+  bikes |> 
+  filter(year == "2016") |> 
+  mutate(month = lubridate::month(date, label = TRUE)) |>
+  summarize(
+    count = sum(count), 
+    across(c(temp, humidity, wind_speed), mean),
+    .by = c(month, day_night)
+  )
+```
+
+
+
+## The Setup
+
+```{r}
+#| label: setup-ggplot
+#| cache: false
+library(ggplot2)
+
+theme_set(theme_minimal(base_family = "Asap SemiCondensed", base_size = 20))
+
+theme_update(
+  plot.title.position = "plot",
+  plot.title = element_text(size = 24),
+  panel.grid.minor = element_blank()
+)
+```
+
+```{r}
+#| label: camcorder-record
+#| include: false
+# camcorder::gg_record(
+#   dir = here::here("announcements", "plots"),
+#   width = 12,
+#   height = 7.8,
+#   dpi = 600,
+#   bg = "white"
+# )
+```
+
+
+
+
+# Visualizing Distributions
+
+
+
+## {#basic-boxplot data-menu-title="Box and Whsiker Plots"}
+
+```{r}
+#| label: geom-boxplot
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "1|2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  geom_boxplot()
+```
+
+
+
+## {#basic-violin data-menu-title="Violin Plots"}
+
+```{r}
+#| label: geom-violin
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  geom_violin()
+```
+
+
+
+## {#basic-violin-boxplot data-menu-title="Violin x Box Plots"}
+
+```{r}
+#| label: geom-violin-boxplot
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "3"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  geom_violin() +
+  geom_boxplot(width = .2)
+```
+
+
+
+# `{ggdist}` {background-color="#171717"}
+
+::: footer
+[mjskay.github.io/ggdist](https://mjskay.github.io/ggdist/)
+:::
+
+
+
+## {#ggdist-eye data-menu-title="Eye Plots"}
+
+```{r}
+#| label: ggdist-eye
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_eye()
+```
+
+
+
+## {#ggdist-halfeye data-menu-title="Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-halfeye
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_halfeye()
+```
+
+
+
+## {#ggdist-halfeye-width-1 data-menu-title="Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-halfeye-width-1
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_halfeye(.width = c(.5)) ## default: c(.66, .95)
+```
+
+
+
+## {#ggdist-halfeye-width-2 data-menu-title="Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-halfeye-width-2
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_halfeye(.width = c(0, 1), adjust = .5, shape = 23)
+```
+
+
+
+## {#ggdist-penguins data-menu-title="Bill Dimensions of Brush-Tailed Penguins"}
+
+![["Bill Dimensions of Brush-Tailed Penguins"](https://github.com/Z3tt/TidyTuesday/tree/main/plots/2020_31)](img/showcase/palmer-penguins.png){fig-align="center" fig-size="80%" fig-alt="A scatter plot of bill depth versus bill length (upper) and a raincloud plot of bill ratios (lower) of three brush-tailed penguin species."}
+
+
+
+## {#ggdist-economist-languages data-menu-title="Speech and Information Rates across Language Families"}
+
+![My reinterpreted [The Economist graphic](https://www.economist.com/graphic-detail/2019/09/28/why-are-some-languages-spoken-faster-than-others)](img/showcase/speech-speed.png){fig-align="center" fig-alt="The raincloud chart showing the distributions of normalized speech rates (dark pink) and information rates (dark lime green) across language families."}
+
+
+
+## {#ggdist-halfeye-groups data-menu-title="Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-halfeye-groups
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "1|2"
+ggplot(bikes, aes(x = season, y = humidity, fill = day_night)) +
+  ggdist::stat_halfeye(.width = 0, adjust = .5, slab_alpha = .5, shape = 21)
+```
+
+
+
+## {#ggdist-interval data-menu-title="Multi-Interval Plots"}
+
+```{r}
+#| label: ggdist-interval
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_interval()
+```
+
+
+
+## {#ggdist-interval-custom data-menu-title="Multi-Interval Plots"}
+
+```{r}
+#| label: ggdist-interval-custom
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2|3"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_interval(.width = 1:4*.25, linewidth = 10) +
+  scale_color_viridis_d(option = "mako", direction = -1, end = .9)
+```
+
+
+
+## {#ggdist-interval-dots data-menu-title="Multi-Interval x Dot Plots"}
+
+```{r}
+#| label: ggdist-interval-dots
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "3"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_interval(.width = 1:4*.25) +
+  ggdist::stat_dots(position = position_nudge(x = .05)) +
+  scale_color_viridis_d(option = "mako", direction = -1, end = .9)
+```
+
+
+
+## {#ggdist-coffee data-menu-title="Not My Cup of Coffee"}
+
+![["Not My Cup of Coffee"](https://www.behance.net/gallery/100638417/Not-My-Cup-of-Coffee)](img/showcase/coffee-ratings.png){fig-align="center" fig-alt="Distribution of coffee bean ratings by the Coffee Quality Institute for countries with 25 or more reviews (up to 2018). Distributions are shown as dot plots and multiple interval stripes."}
+
+
+
+## {#ggdist-interval-halfeye data-menu-title="Multi-Interval x Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-interval-halfeye
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "3"
+ggplot(bikes_day, aes(x = season, y = humidity)) +
+  ggdist::stat_interval(.width = 1:4*.25) +
+  ggdist::stat_halfeye(.width = 0, color = "white", position = position_nudge(x = .025)) +
+  scale_color_viridis_d(option = "mako", direction = -1, end = .9)
+```
+
+
+
+## {#ggdist-interval-halfeye-groups data-menu-title="Multi-Interval x Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-interval-halfeye-groups
+#| fig-width: 12
+#| fig-align: center
+#| code-line-numbers: "1|3"
+ggplot(bikes, aes(x = season, y = humidity)) +
+  ggdist::stat_interval(.width = 1:4*.25) +
+  ggdist::stat_halfeye(aes(fill = day_night), slab_alpha = .3, shape = 21, .width = 0, color = "white", position = position_nudge(x = .025)) +
+  scale_color_viridis_d(option = "mako", direction = -1, end = .9)
+```
+
+
+
+## {#ggdist-interval-halfeye-groups-colors data-menu-title="Multi-Interval x Half-Eye Plots"}
+
+```{r}
+#| label: ggdist-interval-halfeye-groups-colors
+#| fig-width: 12
+#| fig-height: 6
+#| fig-align: center
+#| code-line-numbers: "4|5"
+ggplot(bikes, aes(x = season, y = humidity)) +
+  ggdist::stat_interval(.width = 1:4*.25) +
+  ggdist::stat_halfeye(aes(fill = day_night), slab_alpha = .3, shape = 21, .width = 0, color = "white", position = position_nudge(x = .025)) +
+  scale_color_grey(start = .9, end = .2) +
+  scale_fill_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggdist-ccdf-interval data-menu-title="CCDF Bar Plots"}
+
+```{r}
+#| label: ggdist-ccdf-interval
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes, aes(x = season, y = humidity)) +
+  ggdist::stat_ccdfinterval()
+```
+
+
+
+## {#ggdist-examples data-menu-title="More {ggdist} Layers"}
+
+![Source: [mjskay.github.io/ggdist](https://mjskay.github.io/ggdist/)](img/ggdist-preview.png){fig-align="center" fig-alt="The showcase of available layers in the ggdist package as shown on the package webpage."}
+
+
+
+# `{ggridges}` {background-color="#171717"}
+
+::: footer
+[wilkelab.org/ggridges](https://wilkelab.org/ggridges/)
+:::
+
+
+
+## {#ggridges-density data-menu-title="Ridgeline Plots"}
+
+```{r}
+#| label: ggridges-density
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "1|2"
+ggplot(bikes_day, aes(x = humidity, y = season)) +
+  ggridges::geom_density_ridges()
+```
+
+
+
+## {#ggridges-density-groups data-menu-title="Ridgeline Plots"}
+
+```{r}
+#| label: ggridges-density-groups
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "1|2"
+ggplot(bikes, aes(x = humidity, y = season, fill = day_night)) +
+  ggridges::geom_density_ridges(alpha = .5)
+```
+
+
+
+## {#ggridges-density-groups-custom data-menu-title="Ridgeline Plots"}
+
+```{r}
+#| label: ggridges-density-groups-custom
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2|3"
+ggplot(bikes, aes(x = humidity, y = season, fill = day_night)) +
+  ggridges::geom_density_ridges(alpha = .5, color = "white", scale = 1.5) +
+  scale_fill_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggridges-votes data-menu-title="Not My Cup of Coffee"}
+
+![](img/ggridges-votes.png){fig-align="center" fig-alt="Results from Catalan regional elections, 1980-2015"}
+
+
+
+## {#ggridges-density-gradient data-menu-title="Ridgeline Plots"}
+
+```{r}
+#| label: ggridges-density-gradient
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2|3"
+ggplot(bikes_day, aes(x = humidity, y = season, fill = stat(x))) +
+  ggridges::geom_density_ridges_gradient(color = "white", scale = 1.5) +
+  scale_fill_gradient(low = "#FFCE52", high = "#663399", guide = "none")
+```
+
+
+
+# Visualizing x-y Relationships
+
+
+
+## {#geom-point data-menu-title="Scatter Plot"}
+
+```{r}
+#| label: geom-point
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "1|2"
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  geom_point(size = 3, alpha = .5)
+```
+
+
+
+## {#geom-point-high-transparency data-menu-title="Scatter Plot"}
+
+```{r}
+#| label: geom-point-high-transparency
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  geom_point(size = 3, alpha = .1)
+```
+
+
+
+# `{ggpointdensity}` {background-color="#171717"}
+
+::: footer
+[github.com/LKremer/ggpointdensity](https://github.com/LKremer/ggpointdensity)
+:::
+
+
+
+## {#ggpointdensity-default data-menu-title="Point Densities"}
+
+```{r}
+#| label: ggpointdensity-default
+#| fig-width: 12
+#| fig-height: 6.9
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  ggpointdensity::geom_pointdensity(size = 3)
+```
+
+
+
+## {#ggpointdensity-custom data-menu-title="Point Densities"}
+
+```{r}
+#| label: ggpointdensity-custom
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2|3"
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  ggpointdensity::geom_pointdensity(size = 3, adjust = .5) +
+  scale_color_gradient(low = "#FFCE52", high = "#663399")
+```
+
+
+
+# `{ggblend}` {background-color="#171717"}
+
+::: footer
+[mjskay.github.io/ggblend](https://mjskay.github.io/ggblend/)
+:::
+
+
+
+## {#ggblend-no data-menu-title="Gradual Density Regions"}
+
+```{r, dev="png", dev.args=list(type="cairo")}
+#| label: ggblend-no
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
+  geom_point(size = 5, alpha = .5) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggblend-multiply data-menu-title="Gradual Density Regions"}
+
+```{r, dev="png", dev.args=list(type="cairo")}
+#| label: ggblend-multiply
+#| fig-width: 12
+#| fig-height: 6.6
+#| fig-align: center
+#| code-line-numbers: "2"
+ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
+  geom_point(size = 5, alpha = .5) |> ggblend::blend("multiply") +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggblend-default data-menu-title="Gradual Density Regions"}
+
+```{r, dev="png", dev.args=list(type="cairo")}
+#| label: ggblend-multiply-lighten
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "1|2|3"
+library(ggblend)
+ggplot(bikes, aes(x = humidity, y = temp, color = day_night, partition = day_night)) +
+  geom_point(size = 5, alpha = .5) * (blend("lighten") + blend("multiply", alpha = 0.5)) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+# `{ggdensity}` {background-color="#171717"}
+
+::: footer
+[jamesotto852.github.io/ggdensity](https://jamesotto852.github.io/ggdensity/)
+:::
+
+
+
+## {#ggdensity-default data-menu-title="Gradual Density Regions"}
+
+```{r}
+#| label: ggdensity-default
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "3|2|4"
+ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
+  geom_point(alpha = .2, shape = 16, size = 2) +
+  ggdensity::geom_hdr_lines() +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggdensity-default-count data-menu-title="Gradual Density Regions"}
+
+```{r}
+#| label: ggdensity-default-count
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "3"
+ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
+  geom_point(alpha = .2, shape = 16, size = 2) +
+  ggdensity::geom_hdr_lines() +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+## {#ggdensity-custom data-menu-title="Gradual Density Regions"}
+
+```{r}
+#| label: ggdensity-custom
+#| fig-width: 12
+#| fig-height: 6.3
+#| fig-align: center
+#| code-line-numbers: "3|4"
+ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
+  geom_point(alpha = .2, shape = 16, size = 2) +
+  ggdensity::geom_hdr_lines(method = "mvnorm") +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+```
+
+
+
+# Working with Text
+
+
+
+## {#geom-line data-menu-title="Time Series"}
+
+```{r}
+#| label: geom-line
+#| output-location: column
+#| code-line-numbers: "1|3,4,5,6|7|8,9,10"
+theme_update(legend.position = "top")
+
+ggplot(bikes_monthly,
+       aes(x = month, y = count, 
+           color = day_night,
+           group = day_night)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(
+    values = c("#EFAC00", "#9C55E3")
+  )
+```
+
+
+
+# `{geomtextpath}` {background-color="#171717"}
+
+::: footer
+[github.com/AllanCameron/geomtextpath](https://github.com/AllanCameron/geomtextpath)
+:::
+
+
+
+## {#geomtextpath-default data-menu-title="Direct Labels"}
+
+```{r}
+#| label: geomtextpath-default
+#| output-location: column
+#| code-line-numbers: "5,6,10|7|8,9,10|14"
+ggplot(bikes_monthly,
+       aes(x = month, y = count, 
+           color = day_night,
+           group = day_night)) +
+  geomtextpath::geom_textline(
+    aes(label = day_night),
+    linewidth = 1,
+    family = "Asap SemiCondensed",
+    fontface = "bold",
+    size = 6.5
+  ) +
+  scale_color_manual(
+    values = c("#EFAC00", "#9C55E3"),
+    guide = "none"
+  )
+```
+
+
+
+## {#geomtextpath-long data-menu-title="Direct Labels"}
+
+```{r}
+#| label: geomtextpath-long
+#| output-location: column
+#| code-line-numbers: "1,2,3,4,5,6|16,17"
+bikes_monthly |>
+  mutate(day_night = if_else(
+    day_night == "day", 
+    "Day period (6am-6pm)", 
+    "Night period (6pm-6am)"
+  )) |> 
+  ggplot(aes(x = month, y = count, 
+             color = day_night,
+             group = day_night)) +
+  geomtextpath::geom_textline(
+    aes(label = day_night),
+    linewidth = 1,
+    family = "Asap SemiCondensed",
+    fontface = "bold",
+    size = 6.5,
+    vjust = -.5, 
+    hjust = .05
+  ) +
+  scale_color_manual(
+    values = c("#EFAC00", "#9C55E3"),
+    guide = "none"
+  )
+```
+
+
+
+## {#geomtextpath-long-wide data-menu-title="Direct Labels"}
+
+```{r}
+#| label: geomtextpath-long-wide
+#| echo: false
+#| purl: false
+#| fig-width: 12
+#| fig-height: 7.5
+#| fig-align: center
+bikes_monthly |>
+  mutate(day_night = if_else(
+    day_night == "day", 
+    "Day period (6am-6pm)", 
+    "Night period (6pm-6am)"
+  )) |> 
+  ggplot(aes(x = month, y = count, 
+             color = day_night,
+             group = day_night)) +
+  geomtextpath::geom_textline(
+    aes(label = day_night),
+    linewidth = 1,
+    family = "Asap SemiCondensed",
+    fontface = "bold",
+    size = 6.5,
+    vjust = -.5, 
+    hjust = .05
+  ) +
+  scale_color_manual(
+    values = c("#EFAC00", "#9C55E3"),
+    guide = "none"
+  )
+```
+
+
+
+# `{ggforce}` {background-color="#171717"}
+
+::: footer
+[ggforce.data-imaginist.com](https://ggforce.data-imaginist.com/)
+:::
+
+
+
+## {#scatter-store-object data-menu-title="Store ggplot Objects"}
+
+```{r}
+#| label: scatter-store-object
+#| cache: false
+#| output-location: column
+#| code-line-numbers: "1|2,3,4|5|6,7,8,9|11"
+g <- 
+  ggplot(bikes,
+       aes(x = temp, y = count,
+           color = day_night)) +
+  geom_point(size = 3, alpha = .4) +
+  scale_color_manual(
+    values = c("#EFAC00", "#9C55E3"),
+    name = NULL
+  )
+
+g
+```
+
+
+
+
+## {#ggforce-mark-default data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-default
+#| output-location: column
+#| code-line-numbers: "2,4|3|4|3,4"
+g + 
+  ggforce::geom_mark_rect(
+    aes(label = "Tube Network Strikes 2015",
+        filter = count > 40000)
+  )
+```
+
+
+
+## {#ggforce-mark-styling data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-styling
+#| output-location: column
+#| code-line-numbers: "5,6,7"
+g + 
+  ggforce::geom_mark_rect(
+    aes(label = "Tube Network Strikes",
+        filter = count > 40000),
+    color = "black",
+    label.family = "Asap SemiCondensed",
+    label.fontsize = 18
+  )
+```
+
+
+
+## {#ggforce-mark-description data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-description
+#| output-location: column
+#| code-line-numbers: "5|8"
+g +
+  ggforce::geom_mark_rect(
+    aes(label = "Tube Network Strikes 2015",
+        filter = count > 40000),
+    description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
+    color = "black",
+    label.family = "Asap SemiCondensed",
+    label.fontsize = c(18, 14)
+  )
+```
+
+
+
+## {#ggforce-mark-circle data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-circle
+#| output-location: column
+#| code-line-numbers: "2"
+g +
+  ggforce::geom_mark_circle(
+    aes(label = "Tube Network Strikes 2015",
+        filter = count > 40000),
+    description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
+    color = "black",
+    label.family = "Asap SemiCondensed",
+    label.fontsize = c(18, 14)
+  )
+```
+
+
+
+## {#ggforce-mark-hull data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-hull
+#| output-location: column
+#| code-line-numbers: "2"
+g +
+  ggforce::geom_mark_hull(
+    aes(label = "Tube Network Strikes 2015",
+        filter = count > 40000),
+    description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
+    color = "black",
+    label.family = "Asap SemiCondensed",
+    label.fontsize = c(18, 14)
+)
+```
+
+
+
+## {#ggforce-mark-modify data-menu-title="Callouts & Group Labels"}
+
+```{r}
+#| label: ggforce-mark-modify
+#| output-location: column
+#| code-line-numbers: "9,10,11,12,13"
+g +
+  ggforce::geom_mark_hull(
+    aes(label = "Tube Network Strikes 2015",
+        filter = count > 40000),
+    description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
+    color = "black",
+    label.family = "Asap SemiCondensed",
+    label.fontsize = c(18, 14),
+    expand = unit(8, "pt"),
+    con.cap = unit(0, "pt"),
+    label.buffer = unit(15, "pt"),
+    con.type = "straight",
+    label.fill = "transparent"
+  )
+```
+
+
+
+## {#kuendigung-survey data-menu-title="Survey kuendigung.org"}
+
+![["Verbraucherumfrage zur Zukunft nach der Krise", kuendigung.org](https://www.kuendigung.org/studien/verbraucherumfrage-zur-zukunft-nach-der-krise/)](https://www.kuendigung.org/downloads/studie/verbraucherumfrage-zur-zukunft-nach-der-krise/10_2_statement_solidaritaet_job_1.png){fig-align="center" fig-size="45%" fig-alt=""}
+
+
+
+# `{ggtext}` {background-color="#171717"}
+
+::: footer
+[wilkelab.org/ggtext](https://wilkelab.org/ggtext/)
+:::
+
+
+
+## {#ggtext-setup data-menu-title="Text Rendering"}
+
+```{r}
+#| label: ggtext-setup
+#| output-location: column
+#| code-line-numbers: "2"
+g + 
+  ggtitle("**TfL bike sharing trends by _period_**")
+```
+
+
+
+## {#ggtext-element-markdown data-menu-title="Text Rendering"}
+
+```{r}
+#| label: ggtext-element-markdown
+#| output-location: column
+#| code-line-numbers: "3,4,5|4"
+g +
+  ggtitle("**TfL bike sharing trends by _period_**") +
+  theme(
+    plot.title = ggtext::element_markdown()
+  ) 
+```
+
+
+
+## {#ggtext-element-markdown-html data-menu-title="Text Rendering"}
+
+```{r}
+#| label: ggtext-element-markdown-html
+#| output-location: column
+#| code-line-numbers: "2|2,4|5"
+#| fig-height: 8.7
+g +
+  ggtitle("<b style='font-size:25pt'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  theme(
+    plot.title = ggtext::element_markdown(),
+    legend.position = "none"
+  )
+```
+
+<div style="font-size:20pt;">
+
+`<b style='font-size:25pt'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*`
+
+</div>
+
+
+
+## {#food-carbon-footprint data-menu-title="Food Carbon Footprint Index"}
+
+![["Food Carbon Footprint Index 2018"](https://github.com/Z3tt/TidyTuesday/tree/main/plots/2020_08)](img/showcase/carbon-foodprint.png){fig-align="center" fig-alt="Two circular hierarchical bar plots showing the carbon footprint 2018 for food consumption and CO2 per continent and country."}
+
+
+
+## {#x-men-characters data-menu-title="Appearance of X-Men Characters"}
+
+![["Appearance of X-Men Characters"](https://www.behance.net/gallery/100640345/Appearance-of-Popular-X-Men-Characters)](img/showcase/xmen-comics.png){fig-align="center" fig-size="45%" fig-alt="Streamgraphs showing the appearance of the most common X-Men characters (Wovlerine, Magneto, Nightcrawler, Storm & Gambit) during the so-called Claremont Run. Chris Claremont is a famous American comic book writer who was in charge of the Uncanny X-Men comic book series from 1975–1991. During that time he developed complex literary themes and strong female characters into superhero comics, and turning the X-Men into one of Marvel's most popular series."}
+
+
+
+## {#european-energy-production data-menu-title="European Energy Production 2018"}
+
+![["European Energy Production 2018"](https://www.behance.net/gallery/101922257/Renewable-Energy-Production-in-Europe)](img/showcase/2020_32_EuropeanEnergy.png){fig-align="center" fig-size="45%" fig-alt="A spatial set of small mutpiles using moon charts to indicate the share of renewable energy across European countries. The size of the moons relates to the amount of energy produced, the filled moon to the share of newable energy. Smaller bubble maps show the production of renewable, nuclear, and conventional thermal energy."}
+
+
+
+## {#friends-mentions data-menu-title="European Energy Production 2018"}
+
+![["Chats about Friends and their Past, Present, and Future Partners"](https://www.behance.net/gallery/119290509/The-One-with-the-Chats-About-FRIENDS)](img/showcase/2020_37_Friends.png){fig-align="center"}
+
+
+
+## {#long-title data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: long-title
+#| output-location: column
+#| code-line-numbers: "2"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night")
+```
+
+
+
+## {#ggtext-textbox data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: ggtext-textbox
+#| output-location: column
+#| code-line-numbers: "3,4,5,6|5"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
+  theme(
+    plot.title =
+      ggtext::element_textbox_simple()
+  )
+```
+
+
+
+## {#ggtext-textbox-margin data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: ggtext-textbox-margin
+#| output-location: column
+#| code-line-numbers: "6,7"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
+  theme(
+    plot.title = 
+      ggtext::element_textbox_simple(
+        margin = margin(t = 12, b = 12),
+        lineheight = 1
+      )
+  )
+```
+
+
+
+## {#ggtext-textbox-fill data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: ggtext-textbox-fill
+#| output-location: column
+#| code-line-numbers: "7"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
+  theme(
+    plot.title = 
+      ggtext::element_textbox_simple(
+        margin = margin(t = 12, b = 12),
+        fill = "grey90",
+        lineheight = 1
+      )
+  )
+```
+
+
+
+## {#ggtext-textbox-styling data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: ggtext-textbox-styling
+#| output-location: column
+#| code-line-numbers: "7,9,10,11,12,13"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
+  theme(
+    plot.title = 
+      ggtext::element_textbox_simple(
+        margin = margin(t = 12, b = 12),
+        padding = margin(rep(12, 4)),
+        fill = "grey90",
+        box.colour = "grey30",
+        linetype = "13",
+        r = unit(9, "pt"),
+        halign = .5,
+        lineheight = 1
+      )
+  )
+```
+
+
+
+## {#ggtext-textbox-render data-menu-title="Handling Long Titles"}
+
+```{r}
+#| label: ggtext-textbox-render
+#| output-location: column
+#| code-line-numbers: "2"
+g +
+  ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  theme(
+    plot.title = 
+      ggtext::element_textbox_simple(
+        margin = margin(t = 12, b = 12),
+        padding = margin(rep(12, 4)),
+        fill = "grey90",
+        box.colour = "grey30",
+        linetype = "13",
+        r = unit(9, "pt"),
+        halign = .5,
+        lineheight = 1
+      ),
+    legend.position = "none"
+  )
+```
+
+
+
+# `{ggiraph}` {background-color="#171717"}
+
+::: footer
+[davidgohel.github.io/ggiraphs](https://davidgohel.github.io/ggiraph/)
+:::
+
+
+
+## {#ggiraph-interactive-ggplots-lines data-menu-title="Interactive ggplots"}
+
+```{r}
+#| label: ggiraph-interactive-lines
+#| eval: false
+#| cache: false
+#| purl: false
+#| code-line-numbers: "3|1,2,3,4|,7,8,9|11,12,17|13,14,15,16"
+p1 <- 
+  ggplot(bikes_monthly, aes(x = month, y = count, color = day_night, group = day_night)) +
+  ggiraph::geom_line_interactive(aes(tooltip = day_night, data_id = day_night), linewidth = 1) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none")
+
+ggiraph::set_girafe_defaults(
+  opts_zoom = ggiraph::opts_zoom(min = 1, max = 4),
+  opts_toolbar = ggiraph::opts_toolbar(position = "bottomright")
+)
+
+ggiraph::girafe(
+  ggobj = p1, width_svg = 12, height_svg = 7,
+  options = list(
+    ggiraph::opts_hover_inv(css = "opacity:0.3;"),
+    ggiraph::opts_hover(css = "stroke-width:5;")
+  )
+)
+```
+
+
+
+
+## {#ggiraph-girafe-lines data-menu-title="Interactive ggplots"}
+
+```{r}
+#| label: ggiraph-interactive-lines
+#| echo: false
+#| cache: false
+#| fig-align: center
+```
+
+
+
+## {#ggiraph-interactive-ggplots-points data-menu-title="Interactive ggplots"}
+
+```{r}
+#| label: ggiraph-interactive-points
+#| eval: false
+#| cache: false
+#| purl: false
+#| code-line-numbers: "3|1,2,3,4,5,6,7,8,9,10,11|13,14,20|15,16,17,18,19"
+p2 <- 
+  ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
+  ggiraph::geom_point_interactive(aes(tooltip = date, data_id = date), size = 3, alpha = .7) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none") +
+  ggtitle("TfL bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  theme(plot.title = ggtext::element_markdown()) +
+  ggforce::geom_mark_hull(
+    aes(label = "Tube Network Strikes 2015", filter = count > 40000),
+    description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
+    color = "black", label.family = "Asap SemiCondensed", label.fontsize = c(18, 14)
+  )
+
+ggiraph::girafe(
+  ggobj = p2, width_svg = 12, height_svg = 7,
+  options = list(
+    ggiraph::opts_tooltip(use_fill = TRUE), 
+    ggiraph::opts_hover(css = "fill:black;stroke:black;stroke-width:8px;opacity:1;"),
+    ggiraph::opts_hover_inv(css = "opacity:0.2;")
+  )
+)
+```
+
+
+
+## {#ggiraph-girafe-points data-menu-title="Interactive ggplots"}
+
+```{r}
+#| label: ggiraph-interactive-points
+#| echo: false 
+#| cache: false
+#| fig-align: center
+```
+
+
+
+# Exciting Extension Packages
+
+
+## Layers
+
++ [**`{geofacet}`**](https://hafen.github.io/geofacet/) — tile grid maps
++ [**`{ggalluvial}`**](https://github.com/hrbrmstr/ggalt) — alluvial plots
++ [**`{ggalt}`**](https://github.com/hrbrmstr/ggalt) — dumbbell, horizon, and lollipop charts, splines, ...
++ [**`{ggbeeswarm}`**](https://github.com/hrbrmstr/ggalt) — beeswarm plots and variants
++ [**`{ggbraid}`**](https://nsgrantham.github.io/ggbraid/) — ribbons for alternating groups
++ [**`{ggbump}`**](https://github.com/davidsjoberg/ggbump) — bump charts
++ [**`{ggdensity}`**](https://jamesotto852.github.io/ggdensity/) — improved density plots
++ [**`{ggdist}`**](https://github.com/davidsjoberg/ggbump) — uncertainty visualizations
++ [**`{ggforce}`**](https://ggforce.data-imaginist.com/) — several interesting layers (and more)
++ [**`{ggpattern}`**](https://github.com/coolbutuseless/ggpattern) — pattern fills for layers
+
+
+## Layers (continued)
+
++ [**`{ggpointdensity}`**](https://github.com/LKremer/ggpointdensity) — density gradients for scatter plots
++ [**`{ggraph}`**](https://github.com/thomasp85/ggraph) — networks, graphs & trees
++ [**`{ggridges}`**](https://github.com/clauswilke/ggridges) — ridgeline plots
++ [**`{ggsankey}`**](https://github.com/davidsjoberg/ggsankey) — sankey diagrams
++ [**`{ggsignif}`**](https://const-ae.github.io/ggsignif/) — significance levels
++ [**`{ggstar}`**](https://github.com/xiangpin/ggstar) — more point shapes
++ [**`{ggstream}`**](https://github.com/davidsjoberg/ggstream) — stream graphs
++ [**`{ggupset}`**](https://github.com/const-ae/ggupset) — upset graphs
++ [**`{treemapify}`**](https://wilkox.org/treemapify/) — treemaps
+
+
+## Utilities
+
++ [**`{cowplot}`**](https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html) — combine ggplots
++ [**`{ggannotate}`**](https://github.com/MattCowgill/ggannotate) — point-n-click annotations
++ [**`{ggblend}`**](https://mjskay.github.io/ggblend/) — blend, compose, adjust layers
++ [**`{ggfittext}`**](https://wilkox.org/ggfittext/) — scale text according to space
++ [**`{ggfx}`**](https://ggfx.data-imaginist.com/) — shaders and filters for layers
++ [**`{ggh4x}`**](https://teunbrand.github.io/ggh4x/) — facets, positions, and more
++ [**`{ggtext}`**](https://wilkelab.org/ggtext/) — text rendering for theme elements + text layers
++ [**`{lemon}`**](https://github.com/stefanedwards/lemon) — axis lines (and a few layers)
++ [**`{patchwork}`**](https://github.com/thomasp85/patchwor) — combine ggplots
++ [**`{scales}`**](https://scales.r-lib.org/) — control scales 
+
+
+## Themes
+
++ [**`{ggdark}`**](https://github.com/nsgrantham/ggdark)
++ [**`{ggsci}`**](https://github.com/jrnold/ggthemes) (also color scales)
++ [**`{ggtech}`**](https://github.com/ricardo-bion/ggtech) (also color scales)
++ [**`{ggthemes}`**](https://github.com/jrnold/ggthemes) (also color scales)
++ [**`{ggthemr}`**](https://github.com/Mikata-Project/ggthemr)
++ [**`{hrbrthemes}`**](https://github.com/hrbrmstr/hrbrthemes) (also color scales)
++ [**`{tvthemes}`**](https://ryo-n7.github.io/tvthemes/) (also color scales)
+
+
+## Color Palettes
+
++ [**`{colorspace}`**](https://cran.r-project.org/web/packages/colorspace/vignettes/colorspace.html)
++ [**`{jcolors}`**](https://jaredhuling.org/jcolors/)
++ [**`{MetBrewer}`**](https://github.com/BlakeRMills/MetBrewer)
++ [**`{nord}`**](https://cran.r-project.org/web/packages/nord/readme/README.html)
++ [**`{rcartocolor}`**](https://jakubnowosad.com/rcartocolor/)
++ [**`{RColorBrewer}`**](https://cran.r-project.org/web/packages/RColorBrewer/index.html)
++ [**`{scico}`**](https://github.com/thomasp85/scico)
++ [**`{unikn}`**](https://github.com/hneth/unikn)
++ [**`{viridis}`**](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
++ [**`{wesanderson}`**](https://github.com/karthik/wesanderson)
+
+
+## Interactive Charts
+
++ [**`{ggiraph}`**](https://davidgohel.github.io/ggiraph/)
++ [**`{plotly}`**](https://plotly.com/r/)
++ [**`{echarts4r}`**](https://echarts4r.john-coene.com/)*
++ [**`{highcharter}`**](https://jkunst.com/highcharter/)*
++ [**`{charter}`**](https://github.com/JohnCoene/charter)*
++ [**`{streamgraph}`**](https://hrbrmstr.github.io/streamgraph/)*
++ [**`{tmap}`**](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html)*
++ [**`{leaflet}`**](https://rstudio.github.io/leaflet/)*
++ [**`{globe4r}`**](https://globe4r.john-coene.com/)*
++ [**`{grapher}`**](https://grapher.network/)*
+
+<span style='font-size:.9em;'>* not using <code>ggplot2</code>
+
+
+
+# <br><b style='color:white;'>Thank You!</b><br><br>{background-color="#292929" background-image="img/bg-blank.png"}
+
+![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%"}
+
+<br><div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a></div><br>
+
+::: footer
+:::
+
+
+
+# Appendix
+
+
+
+# Styling Labels with `{ggtext}` {background-color="#171717"}
+
+::: footer
+[wilkelab.org/ggtext](https://wilkelab.org/ggtext/)
+:::
+
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-df-import
+#| purl: false
+friends <- readr::read_csv(
+  "https://cedricscherer.com/data/friends-mentions-partners.csv"
+)
+
+friends
+```
+
+
+--------------------------------------------------------------------------------
+
+![](https://raw.githubusercontent.com/Z3tt/TidyTuesday/main/plots/2020_37/2020_37_Friends.png){fig-align="center"}
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-colors
+#| purl: false
+match_colors <-
+  tibble::tibble(
+    key = c("Chandler", "Joey", "Monica", "Monica & Chandler", 
+            "Phoebe", "Rachel", "Rachel & Joey", "Ross", "Ross & Rachel"),
+    color = c("#48508c", "#55331d", "#a64d64", "#774f78", 
+              "#5b7233", "#ba2a22", "#882f20", "#f6ab18", "#d86b1d")
+  )
+
+match_colors
+```
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-df-join-colors
+#| purl: false
+#| code-line-numbers: "2,3,4,5|3,4|6,7,8"
+friends |> 
+  mutate(key = if_else(
+    !partners %in% c("Ross & Rachel", "Rachel & Joey", "Monica & Chandler"),
+    word(partners, 1), partners
+  )) |> 
+  left_join(
+    match_colors
+  )
+```
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-style-colors
+#| purl: false
+#| code-line-numbers: "9,10,11,12,13,14,15|12,13"
+friends_render <- friends |> 
+  mutate(key = if_else(
+    !partners %in% c("Ross & Rachel", "Rachel & Joey", "Monica & Chandler"),
+    word(partners, 1), partners
+  )) |> 
+  left_join(
+    match_colors
+  ) |> 
+  mutate(
+    partners = if_else(
+      key %in% c("Ross & Rachel", "Rachel & Joey", "Monica & Chandler"),
+      paste0("<b style='color:", color, "'>", partners, "</b>"),
+      str_replace(partners, key, paste0("<b style='color:", color, "'>", key, "</b>"))
+    )
+  )
+```
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-style-colors-inspect
+#| purl: false
+friends_render |> select(key, color, partners) |> unique()
+```
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-plot-axis
+#| purl: false
+#| fig-width: 14
+#| fig-height: 7
+#| fig-align: center
+ggplot(friends_render,
+       aes(x = id, y = partners)) + 
+  theme(axis.text.y = ggtext::element_markdown(hjust = 0))
+```
+
+
+## Styling Labels with {ggtext}
+
+```{r}
+#| label: friends-plot
+#| eval: false
+#| purl: false
+#| code-line-numbers: "3|3,4|3,5|6|7|8|9,11,12,13,14"
+ggplot(friends_render,
+  aes(x = id, y = partners)) + 
+  geom_point(aes(size = mentions, color = color), alpha = .3) +
+  scale_color_identity() +
+  scale_size_area(max_size = 5, guide = "none") +
+  coord_cartesian(expand = FALSE, clip = "off") +
+  labs(x = "Episodes", y = NULL) +
+  theme_minimal(base_family = "Asap SemiCondensed") +
+  theme(
+    axis.text.y = ggtext::element_markdown(hjust = 0),
+    axis.text.x = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+
+--------------------------------------------------------------------------------
+
+```{r}
+#| label: friends-plot
+#| echo: false
+#| purl: false
+#| fig-width: 8
+#| fig-height: 5
+#| fig-align: center
+```
+
+
+
+# Composing ggplot's with `{patchwork}` {background-color="#171717"}
+
+::: footer
+[wilkelab.org/ggtext](https://wilkelab.org/ggtext/)
+:::
+
+
+
+
+------------------------------------------------------------------------
+
+![Illustration by [Allison Horst](https://github.com/allisonhorst/stats-illustrations)](img/ah_patchwork.jpg){fig-align="center" fig-alt="Allison Horsts monster illustration of the patchwork extension package."}
+
+
+
+------------------------------------------------------------------------
+
+::: panel-tabset
+### Graphic
+
+```{r}
+#| label: patchwork-p1
+#| echo: false
+#| purl: false
+#| fig-width: 10
+#| fig-height: 5.8
+theme_set(theme_minimal(base_size = 18, base_family = "Pally"))
+theme_update(
+  text = element_text(family = "Pally"),
+  panel.grid = element_blank(),
+  axis.text = element_text(color = "grey50", size = 12),
+  axis.title = element_text(color = "grey40", face = "bold"),
+  axis.title.x = element_text(margin = margin(t = 12)),
+  axis.title.y = element_text(margin = margin(r = 12)),
+  axis.line = element_line(color = "grey80", linewidth = .4),
+  legend.text = element_text(color = "grey50", size = 12),
+  plot.tag = element_text(size = 40, margin = margin(b = 15)),
+  plot.background = element_rect(fill = "white", color = "white")
+)
+
+bikes_sorted <-
+  bikes %>%
+  filter(!is.na(weather_type)) %>%
+  group_by(weather_type) %>%
+  mutate(sum = sum(count)) %>%
+  ungroup() %>%
+  mutate(
+    weather_type = forcats::fct_reorder(
+      str_to_title(str_wrap(weather_type, 5)), sum
+    )
+  )
+
+p1 <- ggplot(
+    bikes_sorted,
+    aes(x = weather_type, y = count, color = weather_type)
+  ) +
+  geom_hline(yintercept = 0, color = "grey80", linewidth = .4) +
+  stat_summary(
+    geom = "point", fun = "sum", size = 12
+  ) +
+  stat_summary(
+    geom = "linerange", ymin = 0, fun.max = function(y) sum(y),
+    size = 2, show.legend = FALSE
+  ) +
+  coord_flip(ylim = c(0, NA), clip = "off") +
+  scale_y_continuous(
+    expand = c(0, 0), limits = c(0, 8500000),
+    labels = scales::comma_format(scale = .0001, suffix = "K")
+  ) +
+  scale_color_viridis_d(
+    option = "magma", direction = -1, begin = .1, end = .9, name = NULL,
+    guide = guide_legend(override.aes = list(size = 7))
+  ) +
+  labs(
+    x = NULL, y = "Sum of reported bike shares", tag = "P1",
+  ) +
+  theme(
+    axis.line.y = element_blank(),
+    axis.text.y = element_text(family = "Pally", color = "grey50", face = "bold",
+                               margin = margin(r = 15), lineheight = .9)
+  )
+
+p1
+```
+
+### Code
+
+```{r}
+#| label: patchwork-p1
+#| eval: false
+#| purl: false
+```
+:::
+
+
+
+------------------------------------------------------------------------
+
+::: panel-tabset
+### Graphic
+
+```{r}
+#| label: patchwork-p2
+#| echo: false
+#| purl: false
+#| fig-width: 10
+#| fig-height: 5.8
+p2 <- bikes_sorted %>%
+  filter(season == "winter", is_weekend == TRUE, day_night == "night") %>%
+  group_by(weather_type, .drop = FALSE) %>%
+  mutate(id = row_number()) %>%
+  ggplot(
+      aes(x = weather_type, y = id, color = weather_type)
+    ) +
+    geom_point(size = 4.5) +
+    scale_color_viridis_d(
+      option = "magma", direction = -1, begin = .1, end = .9, name = NULL,
+      guide = guide_legend(override.aes = list(size = 7))
+    ) +
+    labs(
+      x = NULL, y = "Reported bike shares on\nweekend winter nights", tag = "P2",
+    ) +
+    coord_cartesian(ylim = c(.5, NA), clip = "off")
+
+p2
+```
+
+### Code
+
+```{r}
+#| label: patchwork-p2
+#| eval: false
+#| purl: false
+```
+:::
+
+
+
+------------------------------------------------------------------------
+
+::: panel-tabset
+### Graphic
+
+```{r}
+#| label: patchwork-p3
+#| echo: false
+#| purl: false
+#| fig-width: 10
+#| fig-height: 5.8
+my_colors <- c("#cc0000", "#000080")
+
+p3 <- bikes %>%
+  group_by(week = lubridate::week(date), day_night, year) %>%
+  summarize(count = sum(count)) %>%
+  group_by(week, day_night) %>%
+  mutate(avg = mean(count)) %>%
+  ggplot(aes(x = week, y = count, group = interaction(day_night, year))) +
+    geom_line(color = "grey65", size = 1) +
+    geom_line(aes(y = avg, color = day_night), stat = "unique", size = 1.7) +
+    annotate(
+      geom = "text", label = c("Day", "Night"), color = my_colors,
+      x = c(5, 18), y = c(125000, 29000), size = 8, fontface = "bold", family = "Pally"
+    ) +
+    scale_x_continuous(breaks = c(1, 1:10*5)) +
+    scale_y_continuous(labels = scales::comma_format()) +
+    scale_color_manual(values = my_colors, guide = "none") +
+    labs(
+      x = "Week of the Year", y = "Reported bike shares\n(cumulative # per week)", tag = "P3",
+    )
+
+p3
+```
+
+### Code
+
+```{r}
+#| label: patchwork-p3
+#| eval: false
+#| purl: false
+```
+:::
+
+
+
+## {patchwork}
+
+```{r}
+#| label: patchwork-composition
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+#| code-line-numbers: "3|2,3"
+# install.packages("patchwork")
+library(patchwork)
+(p1 + p2) / p3
+```
+
+
+
+## "Collect Guides"
+
+```{r}
+#| label: patchwork-composition-guides
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+(p1 + p2) / p3 + plot_layout(guides = "collect")
+```
+
+
+
+## Apply Theming
+
+```{r}
+#| label: patchwork-composition-guides-just
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+((p1 + p2) / p3 & theme(legend.justification = "top")) + plot_layout(guides = "collect")
+```
+
+
+
+## Adjust Widths and Heights
+
+```{r}
+#| label: patchwork-composition-heights-widths
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+#| code-line-numbers: "1|2"
+((p1 + p2) / p3 & theme(legend.position = "none")) +
+  plot_layout(heights = c(.2, .1), widths = c(2, 1))
+```
+
+
+
+## Use A Custom Layout
+
+```{r}
+#| label: patchwork-composition-design
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+#| code-line-numbers: "1,2,3,4|5"
+picasso <- "
+AAAAAA#BBBB
+CCCCCCCCC##
+CCCCCCCCC##"
+(p1 + p2 + p3 & theme(legend.position = "none")) + plot_layout(design = picasso)
+```
+
+
+
+## Add Labels
+
+```{r}
+#| label: patchwork-composition-labs-prep
+#| purl: false
+pl1 <- p1 + labs(tag = NULL, title = "Plot One") + theme(legend.position = "none")
+pl2 <- p2 + labs(tag = NULL, title = "Plot Two") + theme(legend.position = "none")
+pl3 <- p3 + labs(tag = NULL, title = "Plot Three") + theme(legend.position = "none")
+```
+
+
+
+## Add Labels
+
+```{r}
+#| label: patchwork-composition-labs
+#| purl: false
+#| fig-width: 15
+#| fig-height: 12
+#| fig-align: "center"
+#| code-line-numbers: "2"
+(pl1 + pl2) / pl3 +
+  plot_annotation(tag_levels = "1", tag_prefix = "P", title = "An overarching title for all 3 plots, placed on the very top while all other titles are sitting below the tags.")
+```
+
+
+
+## Add Inset Plots
+
+```{r}
+#| label: patchwork-composition-inset-1
+#| purl: false
+#| fig-width: 12
+#| fig-height: 7
+#| fig-align: "center"
+pl1 + inset_element(pl2, l = .6, b = .1, r = 1, t = .6)
+```
+
+
+
+## Add Inset Plots
+
+```{r}
+#| label: patchwork-composition-inset-2
+#| purl: false
+#| fig-width: 12
+#| fig-height: 7
+#| fig-align: "center"
+pl1 + inset_element(pl2, l = .6, b = 0, r = 1, t = .5, align_to = 'full')
+```
+
+
