@@ -3,7 +3,7 @@ title: "<b style='color:#505050'>(Even More)</b><br>Exciting Data Visualizations
 title-slide-attributes:
   data-background-image: img/bg-logo.png
   data-background-size: cover
-author: "<b style='color:#ffffff;font-size:1.3em;'><a href='https://www.cedricscherer.com'>Dr. Cédric Scherer</a></b><br>&ensp;R User Group Berlin&ensp;**//**&ensp;October 2023"
+author: "<b style='color:#ffffff;font-size:1.3em;'><a href='https://www.cedricscherer.com'>Dr. Cédric Scherer</a></b><br>&ensp;R User Group Berlin&ensp;**//**&ensp;October 24<sup>th</sup>, 2023"
 format:
   revealjs:
     theme: slides.scss
@@ -1324,7 +1324,6 @@ g +
 ```{r}
 #| label: ggiraph-interactive-lines
 #| eval: false
-#| cache: false
 #| purl: false
 #| code-line-numbers: "3|1,2,3,4|,7,8,9|11,12,17|13,14,15,16"
 p1 <- 
@@ -1365,7 +1364,6 @@ ggiraph::girafe(
 ```{r}
 #| label: ggiraph-interactive-points
 #| eval: false
-#| cache: false
 #| purl: false
 #| code-line-numbers: "3|1,2,3,4,5,6,7,8,9,10,11|13,14,20|15,16,17,18,19"
 p2 <- 
@@ -1491,7 +1489,7 @@ ggiraph::girafe(
 
 # <br><b style='color:white;'>Thank You!</b><br><br>{background-color="#292929" background-image="img/bg-blank.png"}
 
-![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%"}
+![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%" fig-alt"My logo"}
 
 <br><div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a></div><br>
 
