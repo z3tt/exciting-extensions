@@ -1490,7 +1490,7 @@ ggiraph::girafe(
 
 # <br><b style='color:white;'>Thank You!</b><br><br>{background-color="#292929" background-image="img/bg-blank.png"}
 
-![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%" fig-alt"My logo"}
+![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%" fig-alt="My logo"}
 
 <br><div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a></div><br>
 
@@ -1523,10 +1523,6 @@ friends <- readr::read_csv(
 friends
 ```
 
-
---------------------------------------------------------------------------------
-
-![](https://raw.githubusercontent.com/Z3tt/TidyTuesday/main/plots/2020_37/2020_37_Friends.png){fig-align="center"}
 
 
 ## Styling Labels with {ggtext}
