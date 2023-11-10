@@ -88,12 +88,6 @@ include-after: |
 
 
 
-## {#cedric-ggplot-tutorial data-menu-title="Cédric Blog Tutorial"}
-
-![[cedricscherer.com](https://cedricscherer.com)](img/portfolio/blog-tutorial.png){fig-align="center" fig-alt="Screenshot of the blog post on the 2-day workshop at rstudio::conf(2022)"}
-
-
-
 ## {#cedric-ggplot-tutorial-overview data-menu-title="Cédric Blog Tutorial Overview"}
 
 ![[cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/)](img/portfolio/ggplot-tutorial-overview.png){fig-align="center" fig-alt="Overview of some exemplary plots included in my ggplot2 tutorial."}
@@ -846,7 +840,7 @@ ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
 #| fig-width: 12
 #| fig-height: 6.6
 #| fig-align: center
-#| code-line-numbers: "3"
+#| code-line-numbers: "2"
 ggplot(bikes, aes(x = humidity, y = temp)) +
   ggdensity::geom_hdr_points(method = "histogram", probs = c(.95, .5, .1), size = 3, alpha = .7) +
   scale_color_viridis_d(option = "mako", direction = -1, end = .9)
@@ -1558,7 +1552,10 @@ ggiraph::girafe(
 
 ![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%" fig-alt="My logo"}
 
-<br><div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a></div><br>
+<div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a><br><br><br>
+  <a href="https://www.buymeacoffee.com/z3tt" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" style="height: 50px !important;width: 174px !important;"></a>
+  <br><br>
+</div>
 
 ::: footer
 :::
@@ -2073,5 +2070,19 @@ pl1 + inset_element(pl2, l = .6, b = .1, r = 1, t = .6)
 #| fig-align: "center"
 pl1 + inset_element(pl2, l = .6, b = 0, r = 1, t = .5, align_to = 'full')
 ```
+
+
+
+# <br><b style='color:white;'>That's it Folks...</b><br><br>{background-color="#292929" background-image="img/bg-blank.png"}
+
+![](img/portfolio/logo-text-steps-cabinet.png){fig-align="center" width="80%" fig-alt="My logo"}
+
+<div style='text-align:center;font-size:.75em;color:white;'><a style='color:white;'  href="https://cedricscherer.com">www.cedricscherer.com</a>&ensp;//&ensp; <a style='color:white;' href="https://linktr.ee/cedscherer">www.linktr.ee/CedScherer</a><br><br><br>
+  <a href="https://www.buymeacoffee.com/z3tt" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-1.svg" alt="Buy Me A Coffee" style="height: 50px !important;width: 174px !important;"></a>
+  <br><br>
+</div>
+
+::: footer
+:::
 
 
