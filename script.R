@@ -84,17 +84,18 @@ ggplot(bikes_day, aes(x = season, y = humidity)) +
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes_day, aes(x = season, y = humidity)) +
-  ggdist::stat_halfeye(.width = c(.5)) ## default: c(.66, .95)
+  ggdist::stat_halfeye(.width = .5) ## default: c(.66, .95)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes_day, aes(x = season, y = humidity)) +
-  ggdist::stat_halfeye(.width = c(0, 1), adjust = .5, shape = 23)
+  ggdist::stat_halfeye(.width = c(0, 1), adjust = .5, shape = 23, point_size = 5)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = season, y = humidity, fill = day_night)) +
-  ggdist::stat_halfeye(.width = 0, adjust = .5, slab_alpha = .5, shape = 21)
+  ggdist::stat_halfeye(.width = 0, adjust = .5, slab_alpha = .5, shape = 21) +
+  scale_fill_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
@@ -130,19 +131,6 @@ ggplot(bikes, aes(x = season, y = humidity)) +
 
 
 ## -----------------------------------------------------------------------------
-ggplot(bikes, aes(x = season, y = humidity)) +
-  ggdist::stat_interval(.width = 1:4*.25) +
-  ggdist::stat_halfeye(aes(fill = day_night), slab_alpha = .3, shape = 21, .width = 0, color = "white", position = position_nudge(x = .025)) +
-  scale_color_grey(start = .9, end = .2) +
-  scale_fill_manual(values = c("#EFAC00", "#9C55E3"))
-
-
-## -----------------------------------------------------------------------------
-ggplot(bikes, aes(x = season, y = humidity)) +
-  ggdist::stat_ccdfinterval()
-
-
-## -----------------------------------------------------------------------------
 ggplot(bikes_day, aes(x = humidity, y = season)) +
   ggridges::geom_density_ridges()
 
@@ -155,7 +143,7 @@ ggplot(bikes, aes(x = humidity, y = season, fill = day_night)) +
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = humidity, y = season, fill = day_night)) +
   ggridges::geom_density_ridges(alpha = .5, color = "white", scale = 1.5) +
-  scale_fill_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_fill_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
@@ -188,13 +176,13 @@ ggplot(bikes, aes(x = humidity, y = temp)) +
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
   geom_point(size = 5, alpha = .5) +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
   geom_point(size = 5, alpha = .5) |> ggblend::blend("multiply") +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
@@ -202,48 +190,65 @@ library(ggblend)
 
 ggplot(bikes, aes(x = humidity, y = temp, color = day_night, partition = day_night)) +
   geom_point(size = 5, alpha = .5) * (blend("lighten") + blend("multiply", alpha = 0.5)) +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
+
+
+## -----------------------------------------------------------------------------
+ggplot(bikes, aes(x = humidity, y = temp, color = day_night, partition = day_night)) +
+  list(geom_point(size = 5, alpha = .5) * (blend("lighten") + blend("multiply", alpha = 0.5)),
+       geom_vline(xintercept = mean(bikes$humidity), color = "grey", linewidth = 3)) |> blend("hard.light") +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = humidity, y = temp, color = day_night)) +
   geom_point(alpha = .2, shape = 16, size = 2) +
   ggdensity::geom_hdr_lines() +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
   geom_point(alpha = .2, shape = 16, size = 2) +
   ggdensity::geom_hdr_lines() +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
 ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
   geom_point(alpha = .2, shape = 16, size = 2) +
-  ggdensity::geom_hdr_lines(method = "mvnorm") +
+  ggdensity::geom_hdr_lines(method = "mvnorm", probs = c(.95, .75, .5, .25, .1)) +
   scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+
+
+## -----------------------------------------------------------------------------
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  ggdensity::geom_hdr_points(probs = c(.95, .5, .1), size = 3, alpha = .7) +
+  scale_color_viridis_d(option = "rocket", direction = -1, end = .9)
+
+
+## -----------------------------------------------------------------------------
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  geom_density_2d_filled() +
+  coord_cartesian(expand = FALSE)
+
+ggplot(bikes, aes(x = humidity, y = temp)) +
+  ggdensity::geom_hdr(probs = seq(.999, .2, length.out = 5)) +
+  coord_cartesian(expand = FALSE)
 
 
 ## -----------------------------------------------------------------------------
 theme_update(legend.position = "top")
 
-ggplot(bikes_monthly,
-       aes(x = month, y = count, 
-           color = day_night,
-           group = day_night)) +
+ggplot(bikes_monthly, 
+       aes(x = month, y = count, color = day_night, group = day_night)) +
   geom_line(linewidth = 1) +
-  scale_color_manual(
-    values = c("#EFAC00", "#9C55E3")
-  )
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
-ggplot(bikes_monthly,
-       aes(x = month, y = count, 
-           color = day_night,
-           group = day_night)) +
+ggplot(bikes_monthly, 
+       aes(x = month, y = count, color = day_night, group = day_night)) +
   geomtextpath::geom_textline(
     aes(label = day_night),
     linewidth = 1,
@@ -251,10 +256,7 @@ ggplot(bikes_monthly,
     fontface = "bold",
     size = 6.5
   ) +
-  scale_color_manual(
-    values = c("#EFAC00", "#9C55E3"),
-    guide = "none"
-  )
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none")
 
 
 ## -----------------------------------------------------------------------------
@@ -264,9 +266,7 @@ bikes_monthly |>
     "Day period (6am-6pm)", 
     "Night period (6pm-6am)"
   )) |> 
-  ggplot(aes(x = month, y = count, 
-             color = day_night,
-             group = day_night)) +
+  ggplot(aes(x = month, y = count, color = day_night, group = day_night)) +
   geomtextpath::geom_textline(
     aes(label = day_night),
     linewidth = 1,
@@ -276,22 +276,15 @@ bikes_monthly |>
     vjust = -.5, 
     hjust = .05
   ) +
-  scale_color_manual(
-    values = c("#EFAC00", "#9C55E3"),
-    guide = "none"
-  )
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none")
 
 
 ## -----------------------------------------------------------------------------
 g <- 
   ggplot(bikes,
-       aes(x = temp, y = count,
-           color = day_night)) +
-  geom_point(size = 3, alpha = .4) +
-  scale_color_manual(
-    values = c("#EFAC00", "#9C55E3"),
-    name = NULL
-  )
+       aes(x = temp, y = count, color = day_night)) +
+  geom_point(size = 3, alpha = .6) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 g
 
@@ -307,7 +300,7 @@ g +
 ## -----------------------------------------------------------------------------
 g + 
   ggforce::geom_mark_rect(
-    aes(label = "Tube Network Strikes",
+    aes(label = "Tube Network Strikes 2015",
         filter = count > 40000),
     color = "black",
     label.family = "Asap SemiCondensed",
@@ -383,7 +376,7 @@ g +
 
 ## -----------------------------------------------------------------------------
 g +
-  ggtitle("<b style='font-size:25pt'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  ggtitle("<b style='font-size:40pt;font-family:times;'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
   theme(
     plot.title = ggtext::element_markdown(),
     legend.position = "none"
@@ -399,8 +392,7 @@ g +
 g +
   ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
   theme(
-    plot.title =
-      ggtext::element_textbox_simple()
+    plot.title = ggtext::element_textbox_simple()
   )
 
 
@@ -408,11 +400,10 @@ g +
 g +
   ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
   theme(
-    plot.title = 
-      ggtext::element_textbox_simple(
-        margin = margin(t = 12, b = 12),
-        lineheight = 1
-      )
+    plot.title =  ggtext::element_textbox_simple(
+      margin = margin(t = 12, b = 12), 
+      lineheight = 1
+    )
   )
 
 
@@ -420,12 +411,11 @@ g +
 g +
   ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
   theme(
-    plot.title = 
-      ggtext::element_textbox_simple(
-        margin = margin(t = 12, b = 12),
-        fill = "grey90",
-        lineheight = 1
-      )
+    plot.title = ggtext::element_textbox_simple(
+      margin = margin(t = 12, b = 12), 
+      fill = "grey90", 
+      lineheight = 1
+    )
   )
 
 
@@ -433,17 +423,16 @@ g +
 g +
   ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during day and night") +
   theme(
-    plot.title = 
-      ggtext::element_textbox_simple(
-        margin = margin(t = 12, b = 12),
-        padding = margin(rep(12, 4)),
-        fill = "grey90",
-        box.colour = "grey30",
-        linetype = "13",
-        r = unit(9, "pt"),
-        halign = .5,
-        lineheight = 1
-      )
+    plot.title = ggtext::element_textbox_simple(
+      margin = margin(t = 12, b = 12),
+      padding = margin(rep(12, 4)),
+      fill = "grey90",
+      box.colour = "grey30",
+      linetype = "13",
+      r = unit(9, "pt"),
+      halign = .5,
+      lineheight = 1
+    )
   )
 
 
@@ -451,17 +440,16 @@ g +
 g +
   ggtitle("TfL bike sharing trends in London for the years 2015 and 2016 during *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
   theme(
-    plot.title = 
-      ggtext::element_textbox_simple(
-        margin = margin(t = 12, b = 12),
-        padding = margin(rep(12, 4)),
-        fill = "grey90",
-        box.colour = "grey30",
-        linetype = "13",
-        r = unit(9, "pt"),
-        halign = .5,
-        lineheight = 1
-      ),
+    plot.title = ggtext::element_textbox_simple(
+      margin = margin(t = 12, b = 12),
+      padding = margin(rep(12, 4)),
+      fill = "grey90",
+      box.colour = "grey30",
+      linetype = "13",
+      r = unit(9, "pt"),
+      halign = .5,
+      lineheight = 1
+    ),
     legend.position = "none"
   )
 
@@ -490,21 +478,21 @@ ggiraph::girafe(
 p2 <- 
   ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
   ggiraph::geom_point_interactive(aes(tooltip = date, data_id = date), size = 3, alpha = .7) +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none") +
-  ggtitle("TfL bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
-  theme(plot.title = ggtext::element_markdown()) +
   ggforce::geom_mark_hull(
     aes(label = "Tube Network Strikes 2015", filter = count > 40000),
     description = "Commuters had to deal with severe disruptions in public transport on July 9 and August 6",
     color = "black", label.family = "Asap SemiCondensed", label.fontsize = c(18, 14)
-  )
+  ) +
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none") +
+  ggtitle("<b style='font-family:times;'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  theme(plot.title = ggtext::element_markdown()) 
 
 ggiraph::girafe(
   ggobj = p2, width_svg = 12, height_svg = 7,
   options = list(
-    ggiraph::opts_tooltip(use_fill = TRUE), 
+    ggiraph::opts_tooltip(use_fill = TRUE, css = "font-family:asap;font-size:18pt;font-weight:600;color:white;padding:7px;"),
     ggiraph::opts_hover(css = "fill:black;stroke:black;stroke-width:8px;opacity:1;"),
-    ggiraph::opts_hover_inv(css = "opacity:0.2;")
+    ggiraph::opts_hover_inv(css = "opacity:0.3;")
   )
 )
 
