@@ -970,8 +970,7 @@ bikes_monthly |>
     fontface = "bold",
     size = 6.5,
     vjust = -.5, 
-    hjust = .05,
-    text_smoothing = 10
+    hjust = .05
   ) +
   scale_color_manual(
     values = c("#EFAC00", "#9C55E3"),
@@ -1006,8 +1005,7 @@ bikes_monthly |>
     fontface = "bold",
     size = 6.5,
     vjust = -.5, 
-    hjust = .05,
-    text_smoothing = 10
+    hjust = .05
   ) +
   scale_color_manual(
     values = c("#EFAC00", "#9C55E3"),
@@ -1048,7 +1046,7 @@ g
 
 
 
-## {#ggforce-mark-default data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-default data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-default
@@ -1063,7 +1061,7 @@ g +
 
 
 
-## {#ggforce-mark-styling data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-styling data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-styling
@@ -1081,7 +1079,7 @@ g +
 
 
 
-## {#ggforce-mark-description data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-description data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-description
@@ -1100,7 +1098,7 @@ g +
 
 
 
-## {#ggforce-mark-circle data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-circle data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-circle
@@ -1119,7 +1117,7 @@ g +
 
 
 
-## {#ggforce-mark-hull data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-hull data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-hull
@@ -1138,7 +1136,7 @@ g +
 
 
 
-## {#ggforce-mark-modify data-menu-title="Callouts & Group Labels"}
+## {#ggforce-mark-modify data-menu-title="Call-Outs & Group Labels"}
 
 ```{r}
 #| label: ggforce-mark-modify
