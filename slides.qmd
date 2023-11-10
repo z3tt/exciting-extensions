@@ -833,7 +833,7 @@ ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
 
 
 
-## {#ggdensity-custom data-menu-title="Gradual Density Regions"}
+## {#ggdensity-points data-menu-title="Gradual Density Regions"}
 
 ```{r}
 #| label: ggdensity-points
