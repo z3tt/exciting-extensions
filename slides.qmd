@@ -778,7 +778,7 @@ ggplot(bikes, aes(x = humidity, y = temp, color = day_night, partition = day_nig
 #| code-line-numbers: "2,3"
 ggplot(bikes, aes(x = humidity, y = temp, color = day_night, partition = day_night)) +
   list(geom_point(size = 5, alpha = .5) * (blend("lighten") + blend("multiply", alpha = 0.5)),
-       geom_vline(xintercept = mean(bikes$humidity), color = "grey", linewidth = 3)) |> blend("hard.light") +
+       geom_vline(xintercept = mean(bikes$humidity), color = "grey", linewidth = 7)) |> blend("hard.light") +
   scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 ```
 
