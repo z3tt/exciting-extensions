@@ -1436,7 +1436,7 @@ p2 <-
     color = "black", label.family = "Asap SemiCondensed", label.fontsize = c(18, 14)
   ) +
   scale_color_manual(values = c("#EFAC00", "#9C55E3"), guide = "none") +
-  ggtitle("<b style='font-family:times;'>TfL</b> bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
+  ggtitle("TfL bike sharing trends by *<b style='color:#B48200;'>day</b>* and *<b style='color:#663399;'>night</b>*") +
   theme(plot.title = ggtext::element_markdown()) 
 
 ggiraph::girafe(
