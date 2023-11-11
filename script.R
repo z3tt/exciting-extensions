@@ -3,7 +3,9 @@
 #       (Even More) Exciting Data Visualizations with ggplot2 Extensions       #
 #                                                                              #
 #                              Dr. Cedric Scherer                              #
-#                     Berlin R Users // October 24, 2023                       #
+#                              cedricscherer.com                               #
+#                                                                              #
+#            Slides: z3tt.github.io/exciting-extensions/slides.html            #
 #                                                                              #
 #------------------------------------------------------------------------------#
 
@@ -490,7 +492,7 @@ p2 <-
 ggiraph::girafe(
   ggobj = p2, width_svg = 12, height_svg = 7,
   options = list(
-    ggiraph::opts_tooltip(use_fill = TRUE, css = "font-family:asap;font-size:18pt;font-weight:600;color:white;padding:7px;"),
+    ggiraph::opts_tooltip(use_fill = TRUE, css = "font-size:18pt;font-weight:600;color:white;padding:7px;"),
     ggiraph::opts_hover(css = "fill:black;stroke:black;stroke-width:8px;opacity:1;"),
     ggiraph::opts_hover_inv(css = "opacity:0.3;")
   )

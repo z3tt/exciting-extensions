@@ -3,7 +3,7 @@ title: "<b style='color:#505050'>(Even More)</b><br>Exciting Data Visualizations
 title-slide-attributes:
   data-background-image: img/bg-logo.png
   data-background-size: cover
-author: "<b style='color:#ffffff;font-size:1.3em;'><a href='https://www.cedricscherer.com'>Dr. Cédric Scherer</a></b><br>&ensp;R Ladies Rome&ensp;**//**&ensp;November 10<sup>th</sup>, 2023"
+author: "<b style='color:#ffffff;font-size:1.3em;'><a href='https://www.cedricscherer.com'>Dr. Cédric Scherer</a></b>"
 format:
   revealjs:
     theme: slides.scss
@@ -1440,7 +1440,7 @@ p2 <-
 ggiraph::girafe(
   ggobj = p2, width_svg = 12, height_svg = 7,
   options = list(
-    ggiraph::opts_tooltip(use_fill = TRUE, css = "font-family:asap;font-size:18pt;font-weight:600;color:white;padding:7px;"), 
+    ggiraph::opts_tooltip(use_fill = TRUE, css = "font-size:18pt;font-weight:600;color:white;padding:7px;"), 
     ggiraph::opts_hover(css = "fill:black;stroke:black;stroke-width:8px;opacity:1;"),
     ggiraph::opts_hover_inv(css = "opacity:0.3;")
   )
