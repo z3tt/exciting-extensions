@@ -314,8 +314,8 @@ theme_update(
 #| include: false
 # camcorder::gg_record(
 #   dir = here::here("announcements", "plots"),
-#   width = 12,
-#   height = 7.8,
+#   width = 10,
+#   height = 6.8,
 #   dpi = 600,
 #   bg = "white"
 # )
@@ -527,7 +527,7 @@ ggplot(bikes_day, aes(x = season, y = humidity)) +
 #| code-line-numbers: "3"
 ggplot(bikes_day, aes(x = season, y = humidity)) +
   ggdist::stat_interval(.width = 1:4*.25) +
-  ggdist::stat_dots(position = position_nudge(x = .05)) +
+  ggdist::stat_dots(position = position_nudge(x = .05), scale = .8) +
   scale_color_viridis_d(option = "mako", direction = -1, end = .9)
 ```
 
@@ -828,7 +828,7 @@ ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
 ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
   geom_point(alpha = .2, shape = 16, size = 2) +
   ggdensity::geom_hdr_lines(method = "mvnorm", probs = c(.95, .75, .5, .25, .1)) +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 ```
 
 
@@ -1242,7 +1242,7 @@ g +
 
 
 
-## {#friends-mentions data-menu-title="European Energy Production 2018"}
+## {#friends-mentions data-menu-title="Friends Mentions"}
 
 ![["Chats about Friends and their Past, Present, and Future Partners"](https://www.behance.net/gallery/119290509/The-One-with-the-Chats-About-FRIENDS)](img/showcase/2020_37_Friends.png){fig-align="center"}
 
@@ -2068,7 +2068,6 @@ pl1 + inset_element(pl2, l = .6, b = .1, r = 1, t = .6)
 #| fig-align: "center"
 pl1 + inset_element(pl2, l = .6, b = 0, r = 1, t = .5, align_to = 'full')
 ```
-
 
 
 # <br><b style='color:white;'>That's it Folks...</b><br><br>{background-color="#292929" background-image="img/bg-blank.png"}

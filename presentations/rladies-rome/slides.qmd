@@ -527,7 +527,7 @@ ggplot(bikes_day, aes(x = season, y = humidity)) +
 #| code-line-numbers: "3"
 ggplot(bikes_day, aes(x = season, y = humidity)) +
   ggdist::stat_interval(.width = 1:4*.25) +
-  ggdist::stat_dots(position = position_nudge(x = .05)) +
+  ggdist::stat_dots(position = position_nudge(x = .05), scale = .8) +
   scale_color_viridis_d(option = "mako", direction = -1, end = .9)
 ```
 
@@ -1242,7 +1242,7 @@ g +
 
 
 
-## {#friends-mentions data-menu-title="European Energy Production 2018"}
+## {#friends-mentions data-menu-title="Friends Mentions"}
 
 ![["Chats about Friends and their Past, Present, and Future Partners"](https://www.behance.net/gallery/119290509/The-One-with-the-Chats-About-FRIENDS)](img/showcase/2020_37_Friends.png){fig-align="center"}
 

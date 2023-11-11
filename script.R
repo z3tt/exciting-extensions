@@ -114,7 +114,7 @@ ggplot(bikes_day, aes(x = season, y = humidity)) +
 ## -----------------------------------------------------------------------------
 ggplot(bikes_day, aes(x = season, y = humidity)) +
   ggdist::stat_interval(.width = 1:4*.25) +
-  ggdist::stat_dots(position = position_nudge(x = .05)) +
+  ggdist::stat_dots(position = position_nudge(x = .05), scale = .8) +
   scale_color_viridis_d(option = "mako", direction = -1, end = .9)
 
 
@@ -220,7 +220,7 @@ ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
 ggplot(bikes, aes(x = temp, y = count, color = day_night)) +
   geom_point(alpha = .2, shape = 16, size = 2) +
   ggdensity::geom_hdr_lines(method = "mvnorm", probs = c(.95, .75, .5, .25, .1)) +
-  scale_color_manual(values = c("#EFAC00", "#9C55E3"))
+  scale_color_manual(values = c("#EFAC00", "#9C55E3"), name = NULL)
 
 
 ## -----------------------------------------------------------------------------
